@@ -1,3 +1,5 @@
+import sys
+sys.path.insert(0, "/home/vignesh/workspace/github.com/vigneshsekar314/staticSiteGen/src")
 import unittest
 from htmlnode import HTMLNode
 
