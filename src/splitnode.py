@@ -42,7 +42,7 @@ def split_nodes_link(old_nodes: list[TextNode]) -> list[TextNode]:
         markdowns = extract_markdown_links(text)
         for mk in markdowns:
             sections = split_tmp.split(f"[{mk[0]}]({mk[1]})", 1)
-            if sections[0] != "" and sections[0] == split_tmp:
+            if (sections[0] != "" and sections[0] == split_tmp) or sections[0].endswith("!"):  #  to prevent images being recognized as links
                 continue
             else:
                 node_toadd = TextNode(sections[0], text_type = node_text_type)
