@@ -23,7 +23,8 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> li
             for (index, txt) in enumerate(node.text.split(delimiter)):
                 if index % 2 == 0:
                     if len(txt) != 0:
-                        node_delimited.append(TextNode(txt, text_type_text))
+                        #node_delimited.append(TextNode(txt, text_type_text))
+                        node_delimited.append(TextNode(txt, node.text_type))
                 else:
                     if len(txt) != 0:
                         node_delimited.append(TextNode(txt, text_type))

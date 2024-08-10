@@ -17,14 +17,12 @@ def text_to_textnodes(text: str) -> list[TextNode]:
 
 def main():
     content = ""
-    with open('./check/markdowns.txt', 'r') as fileOpen:
-        content = fileOpen.read()
+    # with open('./check/markdowns.txt', 'r') as fileOpen:
+       # content = fileOpen.read()
+    content= "This is supposed to be a markdown file with many elements like **bold**, *italic*, `codeing content`, [link](https://example.com) and an ![image](https://example.com)."
     print(f"original text: {content}")
     print(text_to_textnodes(content))
 
 if __name__ == "__main__":
     main()
-
-
-
 
