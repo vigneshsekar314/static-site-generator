@@ -22,35 +22,54 @@ def block_to_block(block: str) -> str:
     result = ""
     starting_sequence = starting_seq(block)
     match starting_sequence:
-        case "#":
-            result = "heading"
-        case "##":
-            result = "heading"
-        case "###":
-            result = "heading"
-        case "####":
-            result = "heading"
-        case "#####":
-            result = "heading"
-        case "######":
-            result = "heading"
+        case "# ":
+            if multiline_blockcheck(block, "heading"):
+                result = "heading"
+            else:
+                result = "paragraph"
+        case "## ":
+            if multiline_blockcheck(block, "heading"):
+                result = "heading"
+            else:
+                result = "paragraph"
+        case "### ":
+            if multiline_blockcheck(block, "heading"):
+                result = "heading"
+            else:
+                result = "paragraph"
+        case "#### ":
+            if multiline_blockcheck(block, "heading"):
+                result = "heading"
+            else:
+                result = "paragraph"
+        case "##### ":
+            if multiline_blockcheck(block, "heading"):
+                result = "heading"
+            else:
+                result = "paragraph"
+        case "###### ":
+            if multiline_blockcheck(block, "heading"):
+                result = "heading"
+            else:
+                result = "paragraph"
         case "```":
-            ending = ending_seq(block)
-            if ending == "```":
-                result = "block"
+            # ending = ending_seq(block)
+            # if ending == "```":
+            if block.endswith("```"):
+                result = "code"
             else:
                 result = "paragraph" 
-        case ">":
+        case "> ":
             if multiline_blockcheck(block, "quote"):
                 result = "quote"
             else:
                 result = "paragraph"
-        case "*":
+        case "* ":
             if multiline_blockcheck(block, "bullet_star"):
                 result = "unordered_list"
             else:
                 result = "paragraph"
-        case "-":
+        case "- ":
             if multiline_blockcheck(block, "bullet_dash"):
                 result = "unordered_list"
             else:
@@ -83,9 +102,21 @@ def multiline_blockcheck(block: str, check: str) -> bool:
         return True
     elif check == "numbered":
         for ln in block.split("\n"):
-            if not ln[0].isdigit() and not ln[1] == " ":
+            if not (ln[0].isdigit() and ln[1] == "." and ln[2] == " "):
                 return False
         return True
+    elif check == "heading":
+        heading_start = ["# ", "## ", "### ", "#### ", "##### ", "###### "]
+        for ln in block.split("\n"):
+            is_heading = False
+            for st in heading_start:
+                if ln.startswith(st):
+                    is_heading = True
+                    break 
+            if not is_heading:
+                return False
+        return True
+
     else:
         return False
 
@@ -99,14 +130,14 @@ def starting_seq(block: str) -> str:
         while cpy.startswith("#"):
             result += "#"
             cpy = cpy[1:]
-        return result 
+        return result + " " 
     elif cpy.startswith("`"):
         while cpy.startswith("`"):
             result+= "`"
             cpy = cpy[1:]
-    
+        return result
     else:
-        return cpy[0]
+        return cpy[0] + " "
 
 def ending_seq(block: str) -> str:
     result = ""
@@ -135,6 +166,8 @@ This should represent another paragraph. Let us see how it does."""
     # print(paragraph)
     # print(markdown_to_blocks(paragraph))
     blocks = markdown_to_blocks(paragraph)
+    block = "```let infinite = recursion_without_exit_condition()\nlet finite = recursion()```"
+    block_type = block_to_block(block)
     for i in blocks:
         print(f"block: {i}")
         print(f"type: {block_to_block(i)}")
