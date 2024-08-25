@@ -26,23 +26,39 @@ def block2HTMLNode(block: str, block_type: str):
             tag = "h" + str(hcount)
             #  remove # from the block
             block_tmp = block[(hcount+1):]
-            text_nd = LeafNode(tag,block_tmp)
-            html_nodes.append(text_nd)
+            hn = []
+            tnode = text_to_textnodes(block_tmp)
+            for tn in tnode:
+                htmlnds = text_node_to_html_node(tn)
+                hn.append(htmlnds)
+            hnds = ParentNode(tag,children=hn)
+            html_nodes.append(hnds)
         case "code":
+            hn = []
             nodes = text_to_textnodes(block)
             for nd in nodes:
                 htmlnd = text_node_to_html_node(nd)
-                html_nodes.append(htmlnd)
+                hn.append(htmlnd)
+            rnode = ParentNode("pre", children=hn)
+            html_nodes.append(rnode)
         case "quote":
             block_tmp = ""
             for i in block.split("\n"):
                 block_tmp += i[2:]
-            text_nd = LeafNode("blockquote",block_tmp)
-            html_nodes.append(text_nd)
+            tnode= text_to_textnodes(block_tmp)
+            htmlnds = []
+            for tn in tnode:
+                htmlnds.append(text_node_to_html_node(tn))
+            hnds = ParentNode("blockquote",children=htmlnds)
+            html_nodes.append(hnds)
         case "unordered_list":
             lnodes: list[LeafNode] = []
             for lis in block.split("\n"):
-                lnodes.append(LeafNode("li", lis[2:]))
+                tn = text_to_textnodes(lis[2:])
+                for t in tn:
+                   hn = text_node_to_html_node(t)
+                   pn = ParentNode("li", children=[hn])
+                   lnodes.append(pn)
             pnd = ParentNode("ul",children= lnodes)
             html_nodes.append(pnd)
         case "ordered_list":
@@ -52,9 +68,10 @@ def block2HTMLNode(block: str, block_type: str):
             pnd = ParentNode("ol",children= lnodes)
             html_nodes.append(pnd)
         case "paragraph":
-            # nodes = text_to_textnodes(block)
-            lnode = LeafNode("p", block)
-            html_nodes.append(lnode)
+            nodes = text_to_textnodes(block)
+            for nd in nodes:
+                pn = text_node_to_html_node(nd)
+                html_nodes.append(pn)
             # for nd in nodes:
             #     htmlnd = text_node_to_html_node(nd)
             #     html_nodes.append(htmlnd)
@@ -80,7 +97,10 @@ def wordcount(fulltext: str, word: str) -> int:
     return wrdcount
 
 def main():
-    markdown_text = "## Adventures of void.\n\nWhat is void?\n\n- void is nothing\n- void is empty\n- void surrounds all\n\nWe can find interesting reactions between the void and the voidless."
+    # markdown_text = "## Adventures of void.\n\nWhat is void?\n\n- void is nothing\n- void is empty\n- void surrounds all\n\nWe can find interesting reactions between the void and the voidless."
+    markdown_text = ""
+    with open('/home/vignesh/workspace/github.com/vigneshsekar314/staticSiteGen/src/check/markdown2.md') as e:
+        markdown_text = e.read()
     print(markdown2HTML(markdown_text))
 
 
