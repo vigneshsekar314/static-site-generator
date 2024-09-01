@@ -43,8 +43,14 @@ def block2HTMLNode(block: str, block_type: str):
             html_nodes.append(rnode)
         case "quote":
             block_tmp = ""
+            is_not_first = False 
             for i in block.split("\n"):
-                block_tmp += "\n" + i[2:]
+                if is_not_first:
+                    block_tmp += "\n" + i[2:]
+                else:
+                    block_tmp += i[2:]
+                    is_not_first = True
+
             tnode= text_to_textnodes(block_tmp)
             htmlnds = []
             for tn in tnode:
@@ -54,7 +60,7 @@ def block2HTMLNode(block: str, block_type: str):
         case "unordered_list":
             lnodes: list[LeafNode] = []
             for lis in block.split("\n"):
-                tn = text_to_textnodes("\n" + lis[2:])
+                tn = text_to_textnodes(lis[2:])
                 for t in tn:
                    hn = text_node_to_html_node(t)
                    pn = ParentNode("li", children=[hn])
@@ -64,17 +70,17 @@ def block2HTMLNode(block: str, block_type: str):
         case "ordered_list":
             lnodes = []
             for lis in block.split("\n"):
-                lnodes.append(LeafNode("li", lis[2:]))
+                lnodes.append(LeafNode("li", lis[3:]))
             pnd = ParentNode("ol",children= lnodes)
             html_nodes.append(pnd)
         case "paragraph":
+            htmnodes = []
             nodes = text_to_textnodes(block)
             for nd in nodes:
                 pn = text_node_to_html_node(nd)
-                html_nodes.append(pn)
-            # for nd in nodes:
-            #     htmlnd = text_node_to_html_node(nd)
-            #     html_nodes.append(htmlnd)
+                htmnodes.append(pn)
+            pn = ParentNode("p", children = htmnodes)
+            html_nodes.append(pn)
         case _:
             pass
     return html_nodes
