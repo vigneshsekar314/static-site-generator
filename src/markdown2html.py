@@ -44,7 +44,7 @@ def block2HTMLNode(block: str, block_type: str):
         case "quote":
             block_tmp = ""
             for i in block.split("\n"):
-                block_tmp += i[2:]
+                block_tmp += "\n" + i[2:]
             tnode= text_to_textnodes(block_tmp)
             htmlnds = []
             for tn in tnode:
@@ -54,7 +54,7 @@ def block2HTMLNode(block: str, block_type: str):
         case "unordered_list":
             lnodes: list[LeafNode] = []
             for lis in block.split("\n"):
-                tn = text_to_textnodes(lis[2:])
+                tn = text_to_textnodes("\n" + lis[2:])
                 for t in tn:
                    hn = text_node_to_html_node(t)
                    pn = ParentNode("li", children=[hn])
