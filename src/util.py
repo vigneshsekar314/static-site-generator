@@ -17,7 +17,10 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> li
             is_delimiter_start = False
             startswith_delim = node.text.startswith(delimiter)
             endswith_delim = node.text.endswith(delimiter)
-            delimiter_count = countof(node.text, delimiter)
+            node_text = node.text
+            if delimiter == "*" and node.text.startswith("* "):
+                node_text = node.text[2:]
+            delimiter_count = countof(node_text, delimiter)
             if delimiter_count % 2 != 0:
                     raise Exception(f"delimiter {delimiter} is kept open")
             for (index, txt) in enumerate(node.text.split(delimiter)):
@@ -43,9 +46,19 @@ def handlNon(obj):
 
 def countof(words: str, char_to_count: str) -> int:
     c = 0
-    for character in words:
-        if character == char_to_count:
-            c += 1
+    for (index, character) in enumerate(words):
+        if index == 0: 
+            if character == char_to_count:
+                c += 1
+        elif index == words.__len__() - 1:
+            if character == char_to_count:
+                c += 1
+        elif character == char_to_count:
+            pre_space = words[index-1] == " "
+            post_space = words[index+1] == " "
+            line_start = words[index-1] == "\n"
+            if (pre_space or post_space) and not (pre_space and post_space) and not (line_start and char_to_count == "*" and post_space):
+                c += 1
     return c
 
 

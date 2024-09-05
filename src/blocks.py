@@ -130,14 +130,14 @@ def starting_seq(block: str) -> str:
         while cpy.startswith("#"):
             result += "#"
             cpy = cpy[1:]
-        return result + " " 
+        return result + cpy[0] 
     elif cpy.startswith("`"):
         while cpy.startswith("`"):
             result+= "`"
             cpy = cpy[1:]
         return result
     else:
-        return cpy[0] + " "
+        return cpy[0:2] 
 
 def ending_seq(block: str) -> str:
     result = ""

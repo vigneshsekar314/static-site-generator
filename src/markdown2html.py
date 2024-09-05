@@ -5,7 +5,7 @@ from nodechain import text_to_textnodes
 from textnode import text_node_to_html_node 
 from blocks import markdown_to_blocks, block_to_block
 
-def markdown2HTML(markdown: str) -> str:
+def markdown_to_html_node(markdown: str) -> HTMLNode:
     html_str = ""
     #  TODO: logic for markdown to HTML
     nodes: list[HTMLNode] = []
@@ -14,9 +14,11 @@ def markdown2HTML(markdown: str) -> str:
         block_type = block_to_block(block)
         html_nds = block2HTMLNode(block, block_type)
         nodes.extend(html_nds)
-    for nod in nodes:
-        html_str += nod.to_html()
-    return html_str
+    # for nod in nodes:
+        # html_str += nod.to_html()
+    root_node = ParentNode("div", children=nodes)
+    return root_node
+    # return html_str
 
 def block2HTMLNode(block: str, block_type: str):
     html_nodes = []
@@ -107,7 +109,7 @@ def main():
     markdown_text = ""
     with open('/home/vignesh/workspace/github.com/vigneshsekar314/staticSiteGen/src/check/markdown2.md') as e:
         markdown_text = e.read()
-    print(markdown2HTML(markdown_text))
+    print(markdown_to_html_node(markdown_text).to_html())
 
 
 if __name__ == "__main__":
