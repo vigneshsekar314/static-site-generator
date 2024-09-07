@@ -20,17 +20,20 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> li
             node_text = node.text
             if delimiter == "*" and node.text.startswith("* "):
                 node_text = node.text[2:]
-            delimiter_count = countof(node_text, delimiter)
-            # if delimiter_count % 2 != 0:
-                    # raise Exception(f"delimiter {delimiter} is kept open")
+            delimiter_count = countof(node_text, delimiter) # TODO: implement this functionality with a much simpler approach
+            if delimiter_count % 2 != 0: 
+                    raise Exception(f"delimiter {delimiter} is kept open")
             for (index, txt) in enumerate(node.text.split(delimiter)):
                 if index % 2 == 0:
                     if len(txt) != 0:
                         #node_delimited.append(TextNode(txt, text_type_text))
-                        node_delimited.append(TextNode(txt, node.text_type))
+                        node_delimited.append(TextNode(txt, node.text_type, node.url))
                 else:
                     if len(txt) != 0:
-                        node_delimited.append(TextNode(txt, text_type))
+                        if text_type == text_type_code and txt.startswith("\n"):
+                            node_delimited.append(TextNode(txt[1:], text_type))
+                        else:
+                            node_delimited.append(TextNode(txt, text_type))
 
                 
     return node_delimited
@@ -46,18 +49,16 @@ def handlNon(obj):
 
 def countof(words: str, char_to_count: str) -> int:
     c = 0
+    word_length = words.__len__()
     for (index, character) in enumerate(words):
-        if index == 0: 
-            if character == char_to_count:
-                c += 1
-        elif index == words.__len__() - 1:
-            if character == char_to_count:
+        if index == 0 or index == word_length -1: 
+            if character == char_to_count: # TODO: need to think for more cases before fully implementing this 
                 c += 1
         elif character == char_to_count:
             pre_space = words[index-1] == " "
             post_space = words[index+1] == " "
             line_start = words[index-1] == "\n"
-            if (pre_space or post_space) and not (pre_space and post_space) and not (line_start and char_to_count == "*" and post_space):
+            if not (pre_space and post_space) and not (line_start and char_to_count == "*" and post_space):
                 c += 1
     return c
 
