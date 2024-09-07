@@ -61,18 +61,26 @@ def block2HTMLNode(block: str, block_type: str):
             html_nodes.append(hnds)
         case "unordered_list":
             lnodes: list[LeafNode] = []
+            multinode: list[LeafNode] = [] 
             for lis in block.split("\n"):
                 tn = text_to_textnodes(lis[2:])
                 for t in tn:
                    hn = text_node_to_html_node(t)
-                   pn = ParentNode("li", children=[hn])
-                   lnodes.append(pn)
+                   multinode.append(hn)
+                pn = ParentNode("li", children=multinode)
+                lnodes.append(pn)
+                multinode = []
             pnd = ParentNode("ul",children= lnodes)
             html_nodes.append(pnd)
         case "ordered_list":
             lnodes = []
             for lis in block.split("\n"):
-                lnodes.append(LeafNode("li", lis[3:]))
+                multinode: list[LeafNode] = []
+                tn = text_to_textnodes(lis[3:])
+                for t in tn:
+                    hn = text_node_to_html_node(t)
+                    multinode.append(hn)
+                lnodes.append(ParentNode("li", children=multinode))
             pnd = ParentNode("ol",children= lnodes)
             html_nodes.append(pnd)
         case "paragraph":

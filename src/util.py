@@ -14,9 +14,9 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> li
         if type(node) != TextNode:
             node_delimited.append(node)
         else:
-            is_delimiter_start = False
-            startswith_delim = node.text.startswith(delimiter)
-            endswith_delim = node.text.endswith(delimiter)
+            # is_delimiter_start = False
+            # startswith_delim = node.text.startswith(delimiter)
+            # endswith_delim = node.text.endswith(delimiter)
             node_text = node.text
             if delimiter == "*" and node.text.startswith("* "):
                 node_text = node.text[2:]
