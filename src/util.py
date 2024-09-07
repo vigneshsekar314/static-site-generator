@@ -21,8 +21,8 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: str) -> li
             if delimiter == "*" and node.text.startswith("* "):
                 node_text = node.text[2:]
             delimiter_count = countof(node_text, delimiter)
-            if delimiter_count % 2 != 0:
-                    raise Exception(f"delimiter {delimiter} is kept open")
+            # if delimiter_count % 2 != 0:
+                    # raise Exception(f"delimiter {delimiter} is kept open")
             for (index, txt) in enumerate(node.text.split(delimiter)):
                 if index % 2 == 0:
                     if len(txt) != 0:

@@ -1,6 +1,8 @@
 from markdown2html import markdown_to_html_node
-from os.path import isfile, exists, dirname
-from os import makedirs, pardir
+from os.path import isfile, exists, dirname, isdir, join
+from os import makedirs, pardir, listdir, mkdir 
+from shutil import copy
+
 
 def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -24,6 +26,21 @@ def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
     with open(dest_path, "w") as write_context:
         write_context.write(template_content)
 
+def generate_pages_recursive(dir_path_content: str, template_path: str, dest_dir_path: str) -> None:
+    __gen_html(dir_path_content, template_path=template_path, dst_dirpath=dest_dir_path)
+
+def __gen_html(src_dirpath: str, template_path: str, dst_dirpath) -> None:
+    for file_folder in listdir(path=src_dirpath):
+        content_fullpath = join(src_dirpath, file_folder)
+        if isfile(content_fullpath):
+            if not exists(dst_dirpath):
+                mkdir(dst_dirpath)
+            if content_fullpath.endswith(".md"): 
+                destination_fullpath = join(dst_dirpath, file_folder.replace(".md",".html"))
+                generate_page(from_path= content_fullpath, template_path=template_path, dest_path=destination_fullpath)
+        elif isdir(content_fullpath):
+            dest_dir = join(dst_dirpath, file_folder)
+            __gen_html(src_dirpath=content_fullpath, template_path=template_path, dst_dirpath=dest_dir)
 
 def extract_title(markdown: str) -> str:
     firstline = markdown.strip()
