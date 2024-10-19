@@ -1,7 +1,7 @@
 from os import getcwd, listdir, pardir, mkdir 
 from os.path import abspath, join, exists, isfile, isdir
 from shutil import rmtree, copy
-from generatepage import generate_page, generate_pages_recursive
+from generatepage import generate_pages_recursive
 
 def copy_static_to_public():
     cwd = getcwd()

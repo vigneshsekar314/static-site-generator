@@ -1,8 +1,6 @@
 from markdown2html import markdown_to_html_node
 from os.path import isfile, exists, dirname, isdir, join
-from os import makedirs, pardir, listdir, mkdir 
-from shutil import copy
-
+from os import makedirs, listdir, mkdir 
 
 def generate_page(from_path: str, template_path: str, dest_path: str) -> None:
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
@@ -64,7 +62,7 @@ def __get_heading(markdown: str) -> str:
     elif markdown.startswith("###### "):
         return markdown.lstrip("###### ").split("\n",maxsplit=1)[0]
     else:
-        return None
+        return ""
 
 def main():
     para = """
