@@ -4,26 +4,24 @@ from htmlnode import HTMLNode
 class LeafNode(HTMLNode):
 
     def __init__(self, tag: str | None, value: str, props: dict | None = None):
-        if value is None:
-            raise ValueError("the object \"value\" should not be None")
         super().__init__(tag=tag, value=value, children=None, props=props)
 
     def to_html(self) -> str:
         html_str = ""
         if self.tag is not None:
-            opening_tag = "<" + self.tag + ">" 
-            closing_tag = "</" + self.tag + ">"
+            opening_tag: str = "<" + self.tag + ">" 
+            closing_tag: str = "</" + self.tag + ">"
             if self.props is None:
-                html_str =  opening_tag + self.value + closing_tag  
+                html_str =  opening_tag + str(self.value) + closing_tag
             else:
                 html_str = "<" + self.tag 
                 html_str += self.props_to_html() + ">"
-                html_str += self.value + closing_tag
+                html_str += str(self.value) + closing_tag
 
         else:
             html_str = self.value
 
-        return html_str
+        return str(html_str)
 
 def main():
     lf = LeafNode("p","hi how are yu?")
